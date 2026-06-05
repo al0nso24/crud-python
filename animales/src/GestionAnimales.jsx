@@ -56,7 +56,7 @@ export default function GestionAnimales() {
             showCancelButton: true,
             confirmButtonColor: "green",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
+            confirmButtonText: "Sí, borrar!"
         }).then((result) => {
             if (result.isConfirmed){
                 Axios.delete(`http://localhost:5000/borrarAnimal/${id}`).then((res) => {
