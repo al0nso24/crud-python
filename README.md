@@ -1,69 +1,43 @@
 # AnimaLandia
 
-Aplicación web CRUD para registrar, consultar, editar y eliminar animales. El proyecto utiliza React en el frontend, Flask en el backend y MySQL como base de datos.
-
-## Características
-
-- Registrar animales con su especie o nombre
-- Mostrar el listado completo de registros
-- Buscar un animal por su ID
-- Editar y eliminar registros
-- Confirmaciones visuales con SweetAlert2
-- Comunicación frontend-backend mediante API REST
+AnimaLandia es una aplicación web CRUD para registrar y administrar animales. Permite agregar, listar, buscar, editar y eliminar registros.
 
 ## Tecnologías
 
-| Parte | Tecnología |
-| --- | --- |
-| Frontend | React 19, React Router, Axios, Bootstrap, SweetAlert2 |
-| Backend | Python, Flask, Flask-CORS |
-| Base de datos | MySQL |
-| Ejecución local | npm y Python |
+- React
+- React Router
+- Axios
+- Bootstrap
+- SweetAlert2
+- Flask
+- Flask-CORS
+- MySQL
 
-## Estructura del proyecto
+## Arquitectura
 
-```text
-.
-├── animales/             # Aplicación React
-│   ├── public/
-│   └── src/
-│       ├── App.js
-│       ├── Busqueda.jsx
-│       ├── GestionAnimales.jsx
-│       └── Menu.jsx
-├── servidor/
-│   └── app.py            # API Flask
-└── animales.sql          # Creación de la base de datos y la tabla
-```
+El proyecto está dividido en frontend y backend:
 
-La tabla `animal` contiene:
+- `animales/`: interfaz desarrollada con React.
+- `servidor/app.py`: API REST desarrollada con Flask.
+- `animales.sql`: script para crear la base de datos y la tabla.
 
-| Columna | Tipo | Descripción |
-| --- | --- | --- |
-| `id` | `INT`, llave primaria, autoincremental | Identificador del animal |
-| `especie` | `VARCHAR(50)`, obligatoria | Nombre o especie del animal |
+React se comunica con Flask mediante solicitudes HTTP y Flask consulta los datos almacenados en MySQL.
 
-## Requisitos previos
+## Requisitos
 
-- Python 3 y `pip`
+- Python 3
 - Node.js y npm
-- Servidor MySQL activo
+- MySQL
 
-## Instalación y ejecución
+## Configuración de la base de datos
 
-### 1. Crear la base de datos
-
-Abre MySQL Workbench, MySQL CLI o tu gestor preferido y ejecuta:
+Ejecuta el archivo `animales.sql` desde MySQL Workbench o desde la terminal:
 
 ```bash
 mysql -u root -p < animales.sql
 ```
 
-El script crea la base de datos `animales` y la tabla `animal`.
-
-### 2. Configurar la conexión
-
-En `servidor/app.py`, ajusta los valores de `get_Connection()` según tu instalación de MySQL:
+Luego configura la conexión a MySQL en `servidor/app.py`:
 
 ```python
 host="localhost",
@@ -72,80 +46,46 @@ password="TU_CONTRASENA",
 database="animales"
 ```
 
-No subas contraseñas reales al repositorio ni compartas el archivo con credenciales personales.
+## Ejecutar el proyecto
 
-### 3. Iniciar el servidor Flask
+### Backend
 
-Desde una terminal, dentro de la raíz del proyecto:
+Desde la carpeta principal:
 
-```powershell
+```bash
 cd servidor
 python -m pip install Flask flask-cors mysql-connector-python
 python app.py
 ```
 
-La API quedará disponible en `http://localhost:5000`.
+El servidor estará disponible en `http://localhost:5000`.
 
-### 4. Iniciar la aplicación React
+### Frontend
 
-Abre una segunda terminal, dentro de la raíz del proyecto:
+Abre otra terminal desde la carpeta principal:
 
-```powershell
+```bash
 cd animales
 npm install
 npm start
 ```
 
-Abre `http://localhost:3000` en el navegador.
+La aplicación estará disponible en `http://localhost:3000`.
 
-Mantén ejecutándose simultáneamente la API de Flask y la interfaz de React.
+## API
 
-## API REST
+| Método | Ruta | Descripción |
+| --- | --- | --- |
+| GET | `/listaAnimales` | Lista todos los animales |
+| POST | `/nuevoAnimal` | Agrega un animal |
+| GET | `/buscarxid/<id>` | Busca un animal por ID |
+| PUT | `/actualizarAnimal/<id>` | Actualiza un animal |
+| DELETE | `/borrarAnimal/<id>` | Elimina un animal |
 
-URL base: `http://localhost:5000`
+Ejemplo del cuerpo para crear o actualizar un animal:
 
-| Método | Ruta | Cuerpo JSON | Resultado |
-| --- | --- | --- | --- |
-| `GET` | `/listaAnimales` | - | Lista todos los animales |
-| `POST` | `/nuevoAnimal` | `{"especie": "Perro"}` | Agrega un animal |
-| `PUT` | `/actualizarAnimal/<id>` | `{"especie": "Gato"}` | Actualiza un animal |
-| `DELETE` | `/borrarAnimal/<id>` | - | Elimina un animal |
-| `GET` | `/buscarxid/<id>` | - | Busca un animal por ID |
-
-Ejemplo para agregar un registro desde PowerShell:
-
-```powershell
-Invoke-RestMethod `
-  -Uri "http://localhost:5000/nuevoAnimal" `
-  -Method Post `
-  -ContentType "application/json" `
-  -Body '{"especie":"Perro"}'
+```json
+{
+  "especie": "Perro"
+}
 ```
-
-## Comandos útiles
-
-### Frontend
-
-Desde `animales/`:
-
-```powershell
-npm start        # Ejecuta el servidor de desarrollo
-npm test         # Ejecuta las pruebas
-npm run build    # Genera una compilación de producción
-```
-
-### Backend
-
-Desde `servidor/`:
-
-```powershell
-python app.py
-```
-
-## Solución de problemas
-
-- **El frontend no obtiene datos:** verifica que Flask esté activo en el puerto `5000` y que no haya errores de conexión.
-- **Error de acceso a MySQL:** confirma el usuario, contraseña y servidor configurados en `servidor/app.py`.
-- **La base de datos no existe:** vuelve a ejecutar `animales.sql`.
-- **Puerto ocupado:** detén el proceso que usa el puerto o modifica el puerto en `app.py` y las URL de Axios del frontend.
-- **Modo de depuración:** Flask está configurado con `debug=True`; úsalo únicamente en desarrollo local.
