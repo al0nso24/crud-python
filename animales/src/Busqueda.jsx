@@ -60,7 +60,7 @@ export default function Busqueda(){
                             </table>
                         ):(
                             existe && (
-                                <p>Coloca bien el ID del animal 😭</p>
+                                <p>No se encontraron resultados 😭</p>
                             )
                         )
                     }
